@@ -47,7 +47,6 @@ int main(){
     printf("Type and will send....(type exit)\n");
 
     while(1){
-        //blocking
         ssize_t charCount= getline(&line,&lineSize,stdin);
         if(charCount>0){
             if(strcmp(line,"exit\n")==0) break;

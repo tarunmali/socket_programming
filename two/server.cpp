@@ -6,6 +6,49 @@
 #include <netinet/in.h>
 #include <unistd.h>     // Add this for close()
 #include <arpa/inet.h>  // Add this for htons() and converting network addressess
+#include <pthread.h>
+
+// struct AcceptedSockey{
+//     int acceptedSocket;
+//     int error;
+//     bool accpetedSuccessfully;
+// }
+
+void *handleIndividualConnections(void *arg){
+    int client_socket = *((int *)arg);
+    char message[256];
+
+    while (1) {
+        ssize_t bytes_received = recv(client_socket, message, sizeof(message), 0);
+        if (bytes_received <= 0) {
+            printf("Client disconnected\n");
+            close(client_socket);
+            break;
+        }
+        message[bytes_received] = '\0';
+        printf("Client: %s", message);
+    }
+
+    return NULL;
+
+}
+
+void startAccepetingIncomingConnections(int server_socket){
+    while (1) {
+        int client_socket = accept(server_socket, NULL, NULL);
+        printf("Client connected\n");
+
+        // Create a new thread to handle this client
+        pthread_t id;
+        pthread_create(&id, NULL, handleIndividualConnections, &client_socket);
+
+        // Detach the thread so its resources are automatically cleaned up when it exits
+        pthread_detach(id);
+    }
+
+    // pthread_t id;
+    // pthread_create(&id,NULL,handleIndividualConnections,&server_socket);
+}
 
 int main(){
     //create a string to hold data to send to client
@@ -50,28 +93,30 @@ int main(){
     //p1
     //p2 address of remote client
     //sizeof adddress
-    int client_socket= accept(server_socket, NULL, NULL);
-    //accpet is blocking call
-    //
-
-    //last parameter is optional
-    char response[1024];
-
-    while(1){
-        ssize_t  amountReceived=recv(client_socket,&response, sizeof(response),0);
-        if(amountReceived>0){
-            response[amountReceived]=0;
-            printf("Server received %s\n",response);
-
-        }
-        if(amountReceived==0) break;
-    }
+    startAccepetingIncomingConnections(server_socket);
+    // int client_socket= accept(server_socket, NULL, NULL);
+    // //accpet is blocking call
+    // //
+    // //will block the main thread
 
 
-    // send(client_socket, server_message, sizeof(server_message), 0);
+    // //last parameter is optional
+    // char response[1024];
 
-    close(client_socket);
-    shutdown(server_socket,SHUT_RDWR);
+    // while(1){
+    //     ssize_t  amountReceived=recv(client_socket,response, sizeof(response),0);
+    //     if(amountReceived>0){
+    //         response[amountReceived]='\0';
+    //         printf("Server received %s\n",response);
+    //     }
+    //     if(amountReceived==0) break;
+    // }
+
+
+    // // send(client_socket, server_message, sizeof(server_message), 0);
+
+    // close(client_socket);
+    // shutdown(server_socket,SHUT_RDWR);
 
     return 0;
 }
