@@ -45,7 +45,7 @@ void *handleIndividualConnections(void *arg){
             sendToAllClients(response, client_socket);
         }
         if(amountReceived<=0){
-            printf("Client disconnected: Total clients=>%d\n",cntAcceptedClients);
+            printf("Client disconnected\n");
             close(client_socket);  
 
 
@@ -113,7 +113,7 @@ int main(){
 
     while (1) {
         int client_socket = accept(server_socket, NULL, NULL);
-        printf("Client connected: Total clients=>%d\n",cntAcceptedClients+1);
+        printf("Client connected\n");
 
         // Create a new thread to handle this client
         pthread_t id;
