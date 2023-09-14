@@ -64,6 +64,9 @@ int main(){
     if(connection_status==0){
         printf("Successfull\n");
     }
+    else if(connection_status==-1){
+        printf("Unsuccessfull\n");        
+    }
 
 
     // struct sockaddr is another data structure used for socket addresses, but it's more general and can be used for various types of socket addresses, including both IPv4 and IPv6. It's often used for compatibility and to pass socket addresses to functions that expect a struct sockaddr pointer.
