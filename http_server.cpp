@@ -10,17 +10,20 @@
 #include <string.h>
 
 int main(){
+
+
+    //one liner html file
+    // FILE* html_data=fopen("oneLine.html","r");
+    // char response_data[1024]={'\0'};
+    // fgets(response_data,1024,html_data);
+
+    // multiline html file
     FILE* html_data=fopen("index.html","r");
-
     char buffer[128];
-
-    char response_data[2048]={'\0'};;
-    // fgets(response_data,2048,html_data);
-
-   while(fgets(buffer, sizeof(buffer), html_data)){
-        strcat(response_data, buffer);
-    }
-
+    char response_data[2048]={'\0'};
+    while(fgets(buffer, sizeof(buffer), html_data)){
+            strcat(response_data, buffer);
+        }
 
     char http_header[2048]="HTTP/1.1 200 OK\r\n\n";
     strcat(http_header,response_data);
