@@ -6,9 +6,6 @@
 #include <unistd.h>     // Add this for close()
 #include <arpa/inet.h>  // Add this for htons() and converting network addressess
 
-//for strcmp
-#include <string.h>
-
 int main(){
     int client_socket=socket(AF_INET,SOCK_STREAM,  0);
     //@todo
@@ -40,40 +37,20 @@ int main(){
     }
 
 
-
-    char *line=NULL;
-    //pointer to the line
-
-    size_t lineSize=0;
-
-    printf("Type and will send....(type exit)\n");
-
-    while(1){
-        ssize_t charCount= getline(&line,&lineSize,stdin);
-        if(charCount>0){
-            if(strcmp(line,"exit\n")==0) break;
-            ssize_t amountWasSent=send(client_socket,line,sizeof(line),0);
-        }
-    }
-
-
-
     // char request[]="GET / HTTP/1.1\r\n\r\n ";
-    // char *request;
-
-    // request="GET \\ HTTP/1.1\r\nHost:google.com\r\n\r\n";
+    char request[]="GET \\ HTTP/1.1\r\nHost:google.com\r\n\r\n";
     //there is no payload in our request
 
-
-    // char response[4096];
+    char response[4096];
 
     //send a request to the server from the same client_socket
+    send(client_socket,request,sizeof(request),0);
 
     //receve a response to the client_socket from server
-    // recv(client_socket,&response, sizeof(response),0);
+    recv(client_socket,&response, sizeof(response),0);
 
 
- 
+    printf("Response from the server: %s\n", response);
 
     close(client_socket);
 

@@ -55,23 +55,14 @@ int main(){
     //
 
     //last parameter is optional
-    char response[1024];
-
-    while(1){
-        ssize_t  amountReceived=recv(client_socket,&response, sizeof(response),0);
-        if(amountReceived>0){
-            response[amountReceived]=0;
-            printf("Server received %s\n",response);
-
-        }
-        if(amountReceived==0) break;
-    }
-
+    char response[4096];
+    recv(client_socket,&response, sizeof(response),0);
+    printf("Server received %s/n",response);
 
     // send(client_socket, server_message, sizeof(server_message), 0);
 
-    close(client_socket);
-    shutdown(server_socket,SHUT_RDWR);
+
+    close(server_socket);
 
     return 0;
 }
