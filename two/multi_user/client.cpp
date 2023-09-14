@@ -8,27 +8,6 @@
 
 //for strcmp
 #include <string.h>
-#include <pthread.h>
-
-
-void *receiveMessages(void *arg) {
-     int client_socket = *((int *)arg);
-    char response[256];
-    ssize_t bytesRead;
-
-    while ((bytesRead = recv(client_socket, response, sizeof(response) - 1, 0)) > 0) {
-        response[bytesRead] = '\0';
-        printf("Server: %s", response);
-    }
-
-    // Handle disconnection or error here
-    printf("Disconnected from the server\n");
-
-    // Exit the client application when the server disconnects
-    exit(1);
-
-    return NULL;
-}
 
 int main(){
     int client_socket=socket(AF_INET,SOCK_STREAM,  0);
@@ -60,31 +39,45 @@ int main(){
         printf("Unsuccessfull connection of socket to server\n");        
     }
 
-    char *line = NULL;
-    size_t lineSize = 0;
-    printf("Type and will send.... (type exit to quit)\n");
 
-    // Create a thread to handle server responses
-    pthread_t id;
-    pthread_create(&id, NULL, receiveMessages, &client_socket);
 
-    while (1) {
-        ssize_t charCount = getline(&line, &lineSize, stdin);
-        if (charCount > 0) {
-            if (strcmp(line, "exit\n") == 0) break;
-            ssize_t amountWasSent = send(client_socket, line, charCount, 0);
-            if (amountWasSent == -1) {
-                perror("send");
-                break;
-            }
+    char *line=NULL;
+    //pointer to the line
+    size_t lineSize=0;
+    printf("Type and will send....(type exit)\n");
+
+    while(1){
+        //blocking
+        ssize_t charCount= getline(&line,&lineSize,stdin);
+        if(charCount>0){
+            if(strcmp(line,"exit\n")==0) break;
+            ssize_t amountWasSent=send(client_socket,line,sizeof(line),0);
         }
     }
 
-    // Close the client socket and join the receive thread
+
+
+    // char request[]="GET / HTTP/1.1\r\n\r\n ";
+    // char *request;
+
+    // request="GET \\ HTTP/1.1\r\nHost:google.com\r\n\r\n";
+    //there is no payload in our request
+
+
+    // char response[4096];
+
+    //send a request to the server from the same client_socket
+
+    //receve a response to the client_socket from server
+    // recv(client_socket,&response, sizeof(response),0);
+
+
+ 
+
     close(client_socket);
-    pthread_detach(id);
-    free(line);
+
+
+
 
     return 0;
-
 }

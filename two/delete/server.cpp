@@ -9,32 +9,17 @@
 #include <pthread.h>
 
 
-int acceptedClients[10];
-int cntAcceptedClients=0;
+int acceptedSockets[10];
+int cntAcceptedSockets=0; 
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-
-void sendToAllClients(const char *message, int sender_socket) {
-    pthread_mutex_lock(&mutex);
-    for (int i = 0; i < cntAcceptedClients; i++) {
-        if (acceptedClients[i] != sender_socket) {
-            send(acceptedClients[i], message, sizeof(message), 0);
-        }
-    }
-    pthread_mutex_unlock(&mutex);
+void sendReceivedMessagesToOtherClients(char * response, int itself){\
+    for(int i=0;i<cntAcceptedSockets;i++)
+        if(acceptedSockets[i]!=itself)
+            send(acceptedSockets[i], response, sizeof(response), 0);   
 }
 
-
 void *handleIndividualConnections(void *arg){
-
-
-
-
     int client_socket = *((int *)arg);
-    pthread_mutex_lock(&mutex);
-    acceptedClients[cntAcceptedClients++] = client_socket;
-    pthread_mutex_unlock(&mutex);
     char response[256];
 
     while (1) {
@@ -42,32 +27,11 @@ void *handleIndividualConnections(void *arg){
         if(amountReceived>0){
             response[amountReceived]='\0';
             printf("Server received %s\n",response);
-            sendToAllClients(response, client_socket);
+            sendReceivedMessagesToOtherClients(response, client_socket);
         }
         if(amountReceived<=0){
             printf("Client disconnected\n");
-            close(client_socket);  
-
-
-            pthread_mutex_lock(&mutex);
-            for (int i = 0; i < cntAcceptedClients; i++) {
-                if (acceptedClients[i] == client_socket) {
-                    // Remove the client socket from the list
-                    for (int j = i; j < cntAcceptedClients - 1; j++) {
-                        acceptedClients[j] = acceptedClients[j + 1];
-                    }
-                    cntAcceptedClients--;
-                    break;
-                }
-            }
-            pthread_mutex_unlock(&mutex);
-
-
-
-
-
-
-
+            close(client_socket);            
             break;
         } 
     }
@@ -76,9 +40,17 @@ void *handleIndividualConnections(void *arg){
 
 }
 
+void startAccepetingIncomingConnections(int server_socket){
+
+
+    // pthread_t id;
+    // pthread_create(&id,NULL,handleIndividualConnections,&server_socket);
+}
 
 int main(){
-
+    //create a string to hold data to send to client
+    char server_message[256]="You have reached the server";
+    //create the server socket
     int server_socket=socket(AF_INET,SOCK_STREAM,  0);
 
     //define the server address
@@ -100,7 +72,13 @@ int main(){
     else if(result_bind==-1){
         printf("socket bound unsuccessfully\n");        
     }
-
+   
+    //the incpming sockets will coonect to the server socket  
+    //p1
+    //p2 backlog how many connections can be waiting for this socket at one point of time
+    //before calling the accept function
+    //server can queue upto 5 connections
+    //DOUBT
     int listen_result=listen(server_socket, 5);
      if(listen_result==0){
         printf("socket listening successfully\n");
@@ -108,12 +86,10 @@ int main(){
     else if(listen_result==-1){
         printf("socket bound unsuccessfully\n");        
     }    
-
-
-
     while (1) {
         int client_socket = accept(server_socket, NULL, NULL);
-        printf("Client connected\n");
+        acceptedSockets[cntAcceptedSockets++]=client_socket;
+        printf("Client %d connected\n",cntAcceptedSockets);
 
         // Create a new thread to handle this client
         pthread_t id;
@@ -122,7 +98,6 @@ int main(){
         // Detach the thread so its resources are automatically cleaned up when it exits
         pthread_detach(id);
     }
-    
 
     return 0;
 }
