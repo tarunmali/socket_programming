@@ -8,7 +8,10 @@
 #include <arpa/inet.h>  // Add this for htons() and converting network addressess
 #include <pthread.h>
 
+#include <bits/stdc++.h>
 
+
+std::map<std::string, std::string> m;
 int acceptedClients[10];
 int cntAcceptedClients=0;
 
@@ -42,7 +45,37 @@ void *handleIndividualConnections(void *arg){
         if(amountReceived>0){
             response[amountReceived]='\0';
             printf("Server received %s\n",response);
-            sendToAllClients(response, client_socket);
+            std::string str(response);
+            // std::stringstream ss(str);
+            // std::string tok;
+            // std::vector<std::string> vos;
+
+            // char* cString = strdup(str.c_str());
+            // printf("CMD %s\n",cString);
+
+  int space1 = str.find(" ");
+
+  // Extract the first string.
+  std::string cmd = str.substr(0, space1);
+
+  // Find the position of the second space.
+  int space2 = str.find(" ", space1 + 1);
+
+  // Extract the second string.
+  std::string key = str.substr(space1 + 1, space2 - space1 - 1);
+
+  // Extract the third string.
+  std::string value = str.substr(space2 + 1);
+
+
+            char* cmd_c = strdup(cmd.c_str());
+            printf("CMD %s\n",cmd_c);
+            char* key_c = strdup(key.c_str());
+            printf("Key %s\n",key_c);
+            char* value_c = strdup(value.c_str());
+            printf("Value %s\n",value_c);            
+
+            // sendToAllClients(response, client_socket);
         }
         if(amountReceived<=0){
             printf("Client disconnected: Total clients=>%d\n",cntAcceptedClients);
@@ -78,7 +111,7 @@ void *handleIndividualConnections(void *arg){
 
 
 int main(){
-
+    
     int server_socket=socket(AF_INET,SOCK_STREAM,  0);
 
     //define the server address
