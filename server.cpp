@@ -47,19 +47,25 @@ void *handleIndividualConnections(void *arg){
             printf("Server received %s\n",response);
             std::string str(response);
 
-  int space1 = str.find(" ");
+            std::stringstream ss(str);
+            std::string tok;
+            std::vector<std::string> vos;
+            while(getline(ss,tok,' ')) vos.push_back(tok);
+            std::string cmd=vos[0],key=vos[1],value=vos[2];
 
-  // Extract the first string.
-  std::string cmd = str.substr(0, space1);
+//   int space1 = str.find(" ");
 
-  // Find the position of the second space.
-  int space2 = str.find(" ", space1 + 1);
+//   // Extract the first string.
+//   std::string cmd = str.substr(0, space1);
 
-  // Extract the second string.
-  std::string key = str.substr(space1 + 1, space2 - space1 - 1);
+//   // Find the position of the second space.
+//   int space2 = str.find(" ", space1 + 1);
 
-  // Extract the third string.
-  std::string value = str.substr(space2 + 1);
+//   // Extract the second string.
+//   std::string key = str.substr(space1 + 1, space2 - space1 - 1);
+
+//   // Extract the third string.
+//   std::string value = str.substr(space2 + 1);
 
 
             char* cmd_c = strdup(cmd.c_str());
@@ -74,11 +80,14 @@ void *handleIndividualConnections(void *arg){
 
         pthread_mutex_lock(&mutex);
             if(m.find(key)==m.end()){
-                printf("key does not exist adding %s\n",value_d); 
+                // printf("key does not exist adding %s\n",value_d); 
+                printf("mess\n");
                 m[key]=value;
             }
             else{
-                printf("key  exist adding %s\n",value_d);
+                printf("jen\n");
+                // printf("key  exist adding %s\n",value_d);
+                // printf("%s","Dev");
             }
         pthread_mutex_unlock(&mutex);
             // sendToAllClients(response, client_socket);
