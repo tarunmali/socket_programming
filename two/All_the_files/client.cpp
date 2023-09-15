@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -6,17 +8,16 @@
 #include <unistd.h>     // Add this for close()
 #include <arpa/inet.h>  // Add this for htons() and converting network addressess
 
+
+
 int main(){
     int client_socket=socket(AF_INET,SOCK_STREAM,  0);
-    //@todo
-    //socket file descriptor is returned
-    //socket is implemented like a file in you sysytem
-    //?
 
-    //we can use this socket to connect to some remote socket
     
 
     struct sockaddr_in server_address;
+
+
     server_address.sin_family=AF_INET;
     server_address.sin_port=htons(2000);
     // server_address.sin_addr.s_addr=INADDR_ANY;

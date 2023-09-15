@@ -28,6 +28,9 @@ void sendToAllClients(const char *message, int sender_socket) {
 
 void *handleIndividualConnections(void *arg){
 
+
+
+
     int client_socket = *((int *)arg);
     pthread_mutex_lock(&mutex);
     acceptedClients[cntAcceptedClients++] = client_socket;
@@ -42,7 +45,7 @@ void *handleIndividualConnections(void *arg){
             sendToAllClients(response, client_socket);
         }
         if(amountReceived<=0){
-            printf("Client disconnected\n");
+            printf("Client disconnected: Total clients=>%d\n",cntAcceptedClients);
             close(client_socket);  
 
 
@@ -59,10 +62,18 @@ void *handleIndividualConnections(void *arg){
             }
             pthread_mutex_unlock(&mutex);
 
+
+
+
+
+
+
             break;
         } 
     }
+
     return NULL;
+
 }
 
 
@@ -70,12 +81,12 @@ int main(){
 
     int server_socket=socket(AF_INET,SOCK_STREAM,  0);
 
-
+    //define the server address
     struct sockaddr_in server_address;
     server_address.sin_family=AF_INET;
     server_address.sin_port=htons(2000);
     server_address.sin_addr.s_addr=INADDR_ANY;
-
+    //listen for any incoming address 
 
     //bind the socket to our specifiwed ip and port
     int result_bind=bind(server_socket, 
@@ -102,7 +113,7 @@ int main(){
 
     while (1) {
         int client_socket = accept(server_socket, NULL, NULL);
-        printf("Client connected\n");
+        printf("Client connected: Total clients=>%d\n",cntAcceptedClients+1);
 
         // Create a new thread to handle this client
         pthread_t id;

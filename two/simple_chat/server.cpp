@@ -7,6 +7,9 @@
 #include <unistd.h>     // Add this for close()
 #include <arpa/inet.h>  // Add this for htons() and converting network addressess
 
+
+#include <string.h>
+
 int main(){
     //create a string to hold data to send to client
     char server_message[256]="You have reached the server";
@@ -54,7 +57,22 @@ int main(){
     //accpet is blocking call
     //
 
-    //last parameter is optional
+
+    char *line=NULL;
+    size_t lineSize=0;
+    printf("Type and will send....(type exit)\n");
+
+    while(1){
+        ssize_t charCount= getline(&line,&lineSize,stdin);
+        if(charCount>0){
+            if(strcmp(line,"exit\n")==0) break;
+            ssize_t amountWasSent=send(client_socket,line,strlen(line),0);
+        }
+    }
+
+
+
+
     char response[1024];
 
     while(1){

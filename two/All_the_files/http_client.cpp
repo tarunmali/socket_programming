@@ -7,7 +7,7 @@
 #include <arpa/inet.h>  // Add this for htons() anf //converting network addressess
 
 int main(int argc, char *argv[]){
-    char *address=argv[1]; 
+    char *ip=argv[1]; 
 
     int client_socket=socket(AF_INET,SOCK_STREAM,  0);
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     server_address.sin_family=AF_INET;
     server_address.sin_port=htons(80);
     // server_address.sin_addr.s_addr=INADDR_ANY;
-    inet_pton(AF_INET,address, &server_address.sin_addr);
+    inet_pton(AF_INET,ip, &server_address.sin_addr);
 
     int connection_status=connect(client_socket, 
     (struct sockaddr *)& server_address,

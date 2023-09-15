@@ -11,19 +11,12 @@
 
 int main(){
     int client_socket=socket(AF_INET,SOCK_STREAM,  0);
-    //@todo
-    //socket file descriptor is returned
-    //socket is implemented like a file in you sysytem
-    //?
 
-    //we can use this socket to connect to some remote socket
-    
+
 
     struct sockaddr_in server_address;
     server_address.sin_family=AF_INET;
-    server_address.sin_port=htons(2000);
-    // server_address.sin_addr.s_addr=INADDR_ANY;
-    // char *ip="172.253.115.100";
+
     char *ip="127.0.0.1";
     inet_pton(AF_INET,ip,  &server_address.sin_addr.s_addr);
 
@@ -42,7 +35,6 @@ int main(){
 
 
     char *line=NULL;
-    //pointer to the line
     size_t lineSize=0;
     printf("Type and will send....(type exit)\n");
 
@@ -55,29 +47,6 @@ int main(){
         }
     }
 
-
-
-    // char request[]="GET / HTTP/1.1\r\n\r\n ";
-    // char *request;
-
-    // request="GET \\ HTTP/1.1\r\nHost:google.com\r\n\r\n";
-    //there is no payload in our request
-
-
-    // char response[4096];
-
-    //send a request to the server from the same client_socket
-
-    //receve a response to the client_socket from server
-    // recv(client_socket,&response, sizeof(response),0);
-
-
- 
-
     close(client_socket);
-
-
-
-
     return 0;
 }
