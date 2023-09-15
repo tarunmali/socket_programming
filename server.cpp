@@ -46,12 +46,6 @@ void *handleIndividualConnections(void *arg){
             response[amountReceived]='\0';
             printf("Server received %s\n",response);
             std::string str(response);
-            // std::stringstream ss(str);
-            // std::string tok;
-            // std::vector<std::string> vos;
-
-            // char* cString = strdup(str.c_str());
-            // printf("CMD %s\n",cString);
 
   int space1 = str.find(" ");
 
@@ -73,8 +67,20 @@ void *handleIndividualConnections(void *arg){
             char* key_c = strdup(key.c_str());
             printf("Key %s\n",key_c);
             char* value_c = strdup(value.c_str());
-            printf("Value %s\n",value_c);            
+            printf("Value %s\n",value_c);  
+            char* value_d = strdup(value.c_str());
 
+
+
+        pthread_mutex_lock(&mutex);
+            if(m.find(key)==m.end()){
+                printf("key does not exist adding %s\n",value_d); 
+                m[key]=value;
+            }
+            else{
+                printf("key  exist adding %s\n",value_d);
+            }
+        pthread_mutex_unlock(&mutex);
             // sendToAllClients(response, client_socket);
         }
         if(amountReceived<=0){

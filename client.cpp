@@ -8,7 +8,7 @@
 
 //for strcmp
 #include <string.h>
-#include <pthread.h>
+#include <pthread.h>    
 
 
 void *receiveMessages(void *arg) {
