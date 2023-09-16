@@ -11,7 +11,7 @@
 #include <bits/stdc++.h>
 
 
-std::map<std::string, std::string> m;
+std::unordered_map<std::string, std::string> m;
 int acceptedClients[10];
 int cntAcceptedClients=0;
 

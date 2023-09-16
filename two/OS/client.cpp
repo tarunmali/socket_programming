@@ -12,22 +12,26 @@
 
 
 void *receiveMessages(void *arg) {
-     int client_socket = *((int *)arg);
-    char response[256];
-    ssize_t bytesRead;
+    int client_socket = *((int *)arg);
+    char response[4096];
 
-    while ((bytesRead = recv(client_socket, response, sizeof(response) - 1, 0)) > 0) {
-        response[bytesRead] = '\0';
-        printf("Server: %s", response);
+    while (1) {
+        ssize_t  amountReceived=recv(client_socket,response, sizeof(response),0);
+        if(amountReceived>0){
+            response[amountReceived]='\0';
+            printf("Server received %s\n",response);
+        }
+        if(amountReceived<=0){
+            printf("Disconnected from the server\n");
+            close(client_socket);            
+            break;
+        } 
     }
 
-    // Handle disconnection or error here
-    printf("Disconnected from the server\n");
-
-    // Exit the client application when the server disconnects
-    exit(1);
-
     return NULL;
+
+
+
 }
 
 int main(){
