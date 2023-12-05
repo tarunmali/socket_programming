@@ -11,9 +11,8 @@
 #include <string.h>
 
 int main(){
-    //create a string to hold data to send to client
+
     char server_message[256]="You have reached the server";
-    //create the server socket
     int server_socket=socket(AF_INET,SOCK_STREAM,  0);
 
     //define the server address
@@ -36,12 +35,7 @@ int main(){
         printf("socket bound unsuccessfully\n");        
     }
    
-    //the incpming sockets will coonect to the server socket  
-    //p1
-    //p2 backlog how many connections can be waiting for this socket at one point of time
-    //before calling the accept function
-    //server can queue upto 5 connections
-    //DOUBT
+
     int listen_result=listen(server_socket, 5);
      if(listen_result==0){
         printf("socket listening successfully\n");
@@ -50,9 +44,7 @@ int main(){
         printf("socket bound unsuccessfully\n");        
     }    
 
-    //p1
-    //p2 address of remote client
-    //sizeof adddress
+
     int client_socket= accept(server_socket, NULL, NULL);
     //accpet is blocking call
     //
@@ -71,8 +63,6 @@ int main(){
     }
 
 
-
-
     char response[1024];
 
     while(1){
@@ -84,8 +74,6 @@ int main(){
         if(amountReceived==0) break;
     }
 
-
-    // send(client_socket, server_message, sizeof(server_message), 0);
 
     close(client_socket);
     shutdown(server_socket,SHUT_RDWR);
