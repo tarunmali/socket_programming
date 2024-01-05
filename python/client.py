@@ -15,7 +15,7 @@ class Client:
     def __init__(self):
         self.socket = socket(AF_INET, SOCK_STREAM)
         self.socket.connect(('127.0.0.1',9000))
-        print('Enter your first name and RG (Ex: John 123)')
+        print('Enter Bank name and code')
         self.id = input().replace(' ', '')
         msg = 'id_' + self.id
         self.socket.send(msg.encode())

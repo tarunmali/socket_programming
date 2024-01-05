@@ -11,7 +11,7 @@ int id,total_threads;
 //Block of parallel programming
 total_threads=omp_get_num_threads();// returns default no. of the core processor or the architecture.
 id=omp_get_thread_num();// a library function for getting unique id
-printf("Hello Ishaan Ashish Arora from thread %d out of %d threads\n",id,total_threads);
+printf("Hello Suraj from thread %d out of %d threads\n",id,total_threads);
 }
 printf("Program exists\n");
 return 0;
